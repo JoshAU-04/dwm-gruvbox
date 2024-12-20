@@ -1,0 +1,4 @@
+*.o
+.cache/
+dwm/dwm
+dwmblocks/dwmblocks
