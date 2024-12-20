@@ -1,12 +1,16 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-feh --bg-scale ~/Downloads/wp.png
-setxkbmap us,ru -option 'grp:caps_toggle'
+wallpaper="~/Pictures/Wallpapers/13-Autumn-trees-Foliage.jpg"
+
+[ -f "~/.Xresources" ] && xrdb -merge "~/.Xresources"
+[ -f "~/.Xmodmap" ] && xmodmap "~/.Xmodmap"
+
+[ -f "$wallpaper" ] && feh --bg-fill --no-fehbg --no-xinerama "$wallpaper" &
+[ -z "$DISPLAY" ] && loadkeys colemak || setxkbmap us -variant colemak -option 'ctrl:nocaps'
+
+[ pidof xcompmgr ]] >/dev/null && killall xcompmgr
+xcompmgr -n &
+
 dwmblocks &
 
-while true; do
-	# Log stderror to a file
-	dwm 2>~/.dwm.log
-	# No error logging
-	#dwm >/dev/null 2>&1
-done
+exec dwm
