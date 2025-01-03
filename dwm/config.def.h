@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include <X11/XF86keysym.h> // Required for XF86 key symbols
 
 /* appearance */
 static const unsigned int borderpx = 1; /* border pixel of windows */
@@ -30,45 +31,45 @@ static const char dmenufont[] = "FiraCodeNerdFont:size=14";
 
 static char c000000[] = "#000000"; // placeholder value
 
-static char normfgcolor[] = "#bbbbbb";
-static char normbgcolor[] = "#222222";
-static char normbordercolor[] = "#444444";
-static char normfloatcolor[] = "#db8fd9";
+static char normfgcolor[] = "#FFFFFF";
+static char normbgcolor[] = "#000000";
+static char normbordercolor[] = "#333333";
+static char normfloatcolor[] = "#222222";
 
-static char selfgcolor[] = "#eeeeee";
-static char selbgcolor[] = "#005577";
-static char selbordercolor[] = "#005577";
-static char selfloatcolor[] = "#005577";
+static char selfgcolor[] = "#FFFFFF";
+static char selbgcolor[] = "#000000";
+static char selbordercolor[] = "#333333";
+static char selfloatcolor[] = "#222222";
 
-static char titlenormfgcolor[] = "#bbbbbb";
-static char titlenormbgcolor[] = "#222222";
-static char titlenormbordercolor[] = "#444444";
-static char titlenormfloatcolor[] = "#db8fd9";
+static char titlenormfgcolor[] = "#FFFFFF";
+static char titlenormbgcolor[] = "#000000";
+static char titlenormbordercolor[] = "#333333";
+static char titlenormfloatcolor[] = "#222222";
 
 static char titleselfgcolor[] = "#eeeeee";
-static char titleselbgcolor[] = "#005577";
-static char titleselbordercolor[] = "#005577";
-static char titleselfloatcolor[] = "#005577";
+static char titleselbgcolor[] = "#000000";
+static char titleselbordercolor[] = "#333333";
+static char titleselfloatcolor[] = "#222222";
 
 static char tagsnormfgcolor[] = "#bbbbbb";
-static char tagsnormbgcolor[] = "#222222";
-static char tagsnormbordercolor[] = "#444444";
-static char tagsnormfloatcolor[] = "#db8fd9";
+static char tagsnormbgcolor[] = "#000000";
+static char tagsnormbordercolor[] = "#333333";
+static char tagsnormfloatcolor[] = "#222222";
 
 static char tagsselfgcolor[] = "#eeeeee";
-static char tagsselbgcolor[] = "#005577";
-static char tagsselbordercolor[] = "#005577";
-static char tagsselfloatcolor[] = "#005577";
+static char tagsselbgcolor[] = "#000000";
+static char tagsselbordercolor[] = "#333333";
+static char tagsselfloatcolor[] = "#222222";
 
 static char hidnormfgcolor[] = "#005577";
-static char hidselfgcolor[] = "#227799";
-static char hidnormbgcolor[] = "#222222";
+static char hidselfgcolor[] = "#000000";
+static char hidnormbgcolor[] = "#333333";
 static char hidselbgcolor[] = "#222222";
 
-static char urgfgcolor[] = "#bbbbbb";
-static char urgbgcolor[] = "#222222";
-static char urgbordercolor[] = "#ff0000";
-static char urgfloatcolor[] = "#db8fd9";
+static char urgfgcolor[] = "#FFFFFF";
+static char urgbgcolor[] = "#000000";
+static char urgbordercolor[] = "#333333";
+static char urgfloatcolor[] = "#222222";
 
 static char *colors[][ColCount] = {
     /*                       fg                bg                border float */
@@ -151,12 +152,12 @@ static const Rule rules[] = {
      *	WM_WINDOW_ROLE(STRING) = role
      *	_NET_WM_WINDOW_TYPE(ATOM) = wintype
      */
-    RULE(.wintype = WTYPE "DIALOG", .isfloating = 1)
-        RULE(.wintype = WTYPE "UTILITY", .isfloating = 1)
-            RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
-                RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
-                    RULE(.class = "Gimp", .tags = 1 << 4)
-                        RULE(.class = "Firefox", .tags = 1 << 7)};
+	RULE(.wintype = WTYPE "DIALOG", .isfloating = 1)
+	RULE(.wintype = WTYPE "UTILITY", .isfloating = 1)
+	RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
+	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
+	RULE(.class = "Gimp", .tags = 1 << 4)
+	RULE(.class = "Firefox", .tags = 1 << 7)};
 
 /* Bar rules allow you to configure what is shown where on the bar, as well as
  * introducing your own bar modules.
@@ -221,12 +222,29 @@ static const char *dmenucmd[] = {"dmenu_run", "-m",  dmenumon,    "-fn",
                                  dmenufont,   "-nb", normbgcolor, "-nf",
                                  normfgcolor, "-sb", selbgcolor,  "-sf",
                                  selfgcolor,  NULL};
-static const char *termcmd[] = {"kitty", NULL};
+static const char *termcmd[] = {"st", NULL};
+static const char *mailcmd[] = {"st", "neomutt"};
+
+static const char *upvol[]   = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
+static const char *downvol[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
+static const char *mutevol[] = { "pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL };
+static const char *playpause[] = { "playerctl", "play-pause", NULL };
+static const char *pause[] = { "playerctl", "pause", NULL };
+static const char *nexttrack[] = { "playerctl", "next", NULL };
+static const char *prevtrack[] = { "playerctl", "previous", NULL };
 
 static const Key keys[] = {
     /* modifier                     key            function argument */
+    { 0, XF86XK_AudioRaiseVolume, spawn, {.v = upvol } },
+    { 0, XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
+    { 0, XF86XK_AudioMute,        spawn, {.v = mutevol } },
+    { 0, XF86XK_AudioPlay,        spawn, {.v = playpause } },
+    { 0, XF86XK_AudioPause,       spawn, {.v = pause } },
+    { 0, XF86XK_AudioNext,        spawn, {.v = nexttrack } },
+    { 0, XF86XK_AudioPrev,        spawn, {.v = prevtrack } },
     {MODKEY, XK_p, spawn, {.v = dmenucmd}},
     {MODKEY | ShiftMask, XK_Return, spawn, {.v = termcmd}},
+    {MODKEY | ShiftMask, XK_m, spawn, {.v = mailcmd}},
     {MODKEY, XK_b, togglebar, {0}},
     {MODKEY, XK_j, focusstack, {.i = +1}},
     {MODKEY, XK_k, focusstack, {.i = -1}},
@@ -235,8 +253,8 @@ static const Key keys[] = {
     {MODKEY, XK_h, setmfact, {.f = -0.05}},
     {MODKEY, XK_l, setmfact, {.f = +0.05}},
     {MODKEY, XK_Return, zoom, {0}},
-    {MODKEY | Mod4Mask, XK_u, incrgaps, {.i = +1}},
-    {MODKEY | Mod4Mask | ShiftMask, XK_u, incrgaps, {.i = -1}},
+    {MODKEY | Mod4Mask, XK_u, incrgaps, {.i = +10}},
+    {MODKEY | Mod4Mask | ShiftMask, XK_u, incrgaps, {.i = -10}},
     {MODKEY | Mod4Mask, XK_i, incrigaps, {.i = +1}},
     {MODKEY | Mod4Mask | ShiftMask, XK_i, incrigaps, {.i = -1}},
     {MODKEY | Mod4Mask, XK_o, incrogaps, {.i = +1}},

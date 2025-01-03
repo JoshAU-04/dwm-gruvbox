@@ -6,11 +6,13 @@
 [ pidof xcompmgr ]] >/dev/null && killall xcompmgr
 xcompmgr -n &
 
-setxkbmap us -variant colemak -option 'ctrl:nocaps'
+feh --bg-fill -z "/home/t_doctor/Pictures/Favourites"
+setxkbmap us
 
-kitty &
-feh --bg-fill "/home/t_doctor/Pictures/Wallpapers/13-Autumn-trees-Foliage.jpg" &
+dwmbar &
 
-dwmblocks &
+systemctl --user import-environment DISPLAY
+
+xset -r -b
 
 exec dwm
